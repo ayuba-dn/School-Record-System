@@ -5,54 +5,57 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../../components/ui/dialog";
-import { Button } from "../../../../components/ui/button";
+} from "../../../components/ui/dialog";
+import { Button } from "../../../components/ui/button";
 import { Loader2, Plus } from "lucide-react";
-import { useCreateClassMutation } from "../../../../app/api/classApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { EditIcon } from "lucide-react";
+import { useGetSingleClassesQuery, useUpdateClassesMutation } from "../../../app/api/classApi";
 
-const AddClasss = () => {
+const EditClass = ({ classId }) => {
   const navigate = useNavigate();
-  const [createClass, { isLoading, isSuccess, error }] =
-    useCreateClassMutation();
-  const [className, setClassName] = useState();
+  const [updateClass, { isLoading, isSuccess, error }] = useUpdateClassesMutation();
+  const [className, setClassName] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+
+  const { data, isLoading: isFetching } = useGetSingleClassesQuery(classId);
 
   useEffect(() => {
     if (error) {
       toast.error(error.data.message);
-      // console.log(error.data)
+      console.log(error.data);
     }
 
     if (isSuccess) {
-      toast.success("Class Created Successfully");
-      setClassName("");
-      setOpenDialog(false);
+      toast.success("Saved Successfully");
+      setOpenDialog(false); // Close the modal on successful save
     }
   }, [error, isSuccess]);
 
+  useEffect(() => {
+    if (data) {
+      setClassName(data.name); // Set class name when data is fetched
+    }
+  }, [data]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    createClass({ name: className });
+    if (!classId || !className.trim()) {
+      toast.error("Class Name cannot be empty");
+      return;
+    }
+    updateClass({ id: classId, name: className }); // Pass an object with id and name
   };
 
-  // console.log(className)
-
   return (
-    <Dialog onOpenChange={() => setOpenDialog(false)}>
+    <Dialog open={openDialog} onOpenChange={(isOpen) => setOpenDialog(isOpen)}>
       <DialogTrigger>
-        <span
-          onClick={() => setOpenDialog(true)}
-          className="h-10 px-4 py-4 rounded-lg bg-[#4a3aff] text-white hover:bg-[#5446f2] flex items-center gap-2 "
-        >
-          <Plus />
-          Add New Class
-        </span>
+        <EditIcon onClick={() => setOpenDialog(true)} />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="font-semibold">Add New Class</DialogTitle>
+          <DialogTitle className="font-semibold">Edit Class</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-3">
           <div className="flex flex-col gap-2">
@@ -63,11 +66,11 @@ const AddClasss = () => {
               onChange={(e) => setClassName(e.target.value)}
               placeholder="JSS1, JSS2, SS2, e.t.c"
               className="py-3 bg-[#F9F9F9] outline-none px-3 border-none text-sm"
+              disabled={isFetching} // Disable input while fetching class data
             />
           </div>
-
           <Button className="bg-[#4a3aff] text-white hover:bg-[#5446f2]">
-            {isLoading ? <Loader2 className="animate-spin" /> : "Create Class"}
+            {isLoading ? <Loader2 className="animate-spin" /> : "Save"}
           </Button>
         </form>
       </DialogContent>
@@ -75,4 +78,4 @@ const AddClasss = () => {
   );
 };
 
-export default AddClasss;
+export default EditClass;
