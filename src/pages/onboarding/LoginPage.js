@@ -17,6 +17,7 @@ const LoginPage = () => {
   const [credentials, setCredientials] = useState({
     username: "",
     password: "",
+    role: "admin",
   });
 
   useEffect(() => {
