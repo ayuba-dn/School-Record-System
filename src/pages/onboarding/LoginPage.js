@@ -69,8 +69,8 @@ const LoginPage = () => {
             </h2>
 
             <p className="mt-4 leading-relaxed text-white/90">
-              Welcome back to Peculiar Treasure Nusary and Primary School, Log
-              into your dashboard
+              Welcome back to Living Seed Excel Kidz Academy, Log into your
+              dashboard
             </p>
           </div>
         </div>
@@ -84,7 +84,7 @@ const LoginPage = () => {
               <Logo />
             </div>
             <p className="text-sm sm:text-[16px] ">
-              Login into your dashboard on Perculiar Treasure School{" "}
+              Login into your dashboard on Living Seed Excel Kidz Academy{" "}
             </p>
           </div>
 

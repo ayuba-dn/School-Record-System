@@ -14,8 +14,7 @@ const Landing = () => {
           </div>
           <h1 className="hero-heading">
             <span className="welcome">Welcome to</span> <br />
-            Perculiar Treasure <br />
-            Nursery an Primary School
+            Living Seed <br /> Excel Kidz Academy
           </h1>
           <p>
             It will help us, to give you a better experience on our platform.

@@ -60,12 +60,12 @@ const StudentRegistration = () => {
             </div>
 
             <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-              Welcome To Pecular Treasure
+              Welcome To Living Seed Excel Kidz Academy
             </h2>
 
             <p className="mt-4 leading-relaxed text-white/90">
-              We welcome you to Pecular Treasure Nusary & Primary School.
-              Register as an Admin today to proceed to your dashboard
+              We welcome you to Living Seed Excel Kidz Academy. Register as an
+              Admin today to proceed to your dashboard
             </p>
           </div>
         </div>
@@ -79,7 +79,7 @@ const StudentRegistration = () => {
               <Logo />
             </div>
             <p className="text-[16px] text-center">
-              Register as an Admin into Perculiar Treasure School{" "}
+              Register as an Admin into Living Seed Excel Kidz Academy{" "}
             </p>
           </div>
 
