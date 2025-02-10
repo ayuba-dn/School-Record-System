@@ -1,26 +1,43 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { Modal, Input, Button } from "antd";
 import {
   Logo,
   SchoolIcon,
   SchoolIconWhite,
-  StudentIcon,
-  StudentIconWhite,
   TeacherIcon,
   TeachersIconWhite,
 } from "../../components/images";
 
 function SelectPreference() {
   const [selectedPreference, setSelectedPreference] = useState(null);
+  const [showOTPModal, setShowOTPModal] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handlePreferenceClick = (preference) => {
     setSelectedPreference(preference);
   };
 
-  // dispatch(userRole(selectedPreference))
+  const handleContinueClick = () => {
+    if (selectedPreference === "administrator") {
+      setShowOTPModal(true);
+    }
+  };
+
+  const handleOTPSubmit = () => {
+    const expectedOTP = process.env.REACT_APP_ADMIN_OTP || "123456";
+    if (otp === expectedOTP) {
+      setShowOTPModal(false);
+      navigate("/admin-registration"); // Navigate to admin registration page
+    } else {
+      setError("Invalid OTP. Please try again.");
+    }
+  };
 
   return (
-    <main className="pref-container ">
+    <main className="pref-container">
       <section className="pref-headings">
         <div className="pref-logo logo-sm">
           <Logo />
@@ -34,10 +51,10 @@ function SelectPreference() {
           className={
             selectedPreference === "administrator"
               ? "select-active"
-              : " select-deactive"
+              : "select-deactive"
           }
         >
-          <div className="">
+          <div>
             <div>
               <div
                 className={
@@ -54,7 +71,6 @@ function SelectPreference() {
               </div>
               <h3>Administrator</h3>
             </div>
-
             <div
               className={
                 selectedPreference === "administrator"
@@ -89,7 +105,6 @@ function SelectPreference() {
               </div>
               <h3>Teacher</h3>
             </div>
-
             <div
               className={
                 selectedPreference === "teacher"
@@ -99,55 +114,35 @@ function SelectPreference() {
             ></div>
           </div>
         </div>
-        {/* <div
-          onClick={() => handlePreferenceClick('student')}
-          className={
-            selectedPreference === 'student'
-              ? 'select-active'
-              : 'select-deactive'
-          }
-        >
-          <div>
-            <div>
-              <div
-                className={
-                  selectedPreference === 'student'
-                    ? 'pref-icon-active'
-                    : 'pref-icon'
-                }
-              >
-                {selectedPreference === 'student' ? (
-                  <StudentIconWhite />
-                ) : (
-                  <StudentIcon />
-                )}
-              </div>
-              <h3>Student/Parent</h3>
-            </div>
-
-            <div
-              className={
-                selectedPreference === 'student'
-                  ? 'circle-icon-active'
-                  : 'circle-icon'
-              }
-            ></div>
-          </div>
-        </div> */}
       </section>
-
       <div>
-        <Link
-          to={
-            selectedPreference === "administrator"
-              ? "/admin-registration"
-              : "/staff-registration"
-          }
+        <button
+          onClick={handleContinueClick}
           className={selectedPreference ? "btn-blue-active" : "btn-gray"}
+          disabled={!selectedPreference}
         >
           Continue
-        </Link>
+        </button>
       </div>
+
+      <Modal
+        title="Enter OTP"
+        visible={showOTPModal}
+        onCancel={() => setShowOTPModal(false)}
+        footer={null}
+      >
+        <Input
+          type="text"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+          placeholder="Enter OTP"
+          className="otp-input"
+        />
+        {error && <p className="error-message">{error}</p>}
+        <Button onClick={handleOTPSubmit} type="primary">
+          Verify
+        </Button>
+      </Modal>
     </main>
   );
 }
