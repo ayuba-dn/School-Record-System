@@ -853,7 +853,7 @@ const AddStudent = () => {
   const [createStudent, { isLoading, isSuccess, error }] =
     useCreateStudentMutation();
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
-  const [classId, setClassId] = useState();
+  const [studentClass, setStudentClass] = useState();
   const [age, setAge] = useState();
   const [lgas, setLgas] = useState([]); // Local Governments based on selected state
   const [profilePicture, setProfilePicture] = useState(null);
@@ -888,7 +888,6 @@ const AddStudent = () => {
     firstName: "",
     middleName: "",
     otherNames: "",
-    studentClass: "",
     parentsNumber: "",
     gender: "",
     stateOfOrigin: "",
@@ -932,7 +931,7 @@ const AddStudent = () => {
   const handleClassChange = (e) => {
     const value = parseInt(e.target.value, 10);
     console.log('Selected Class ID:', value);  // Check the value of class ID
-    setClassId(value);
+    setStudentClass(value);
   };
   
 
@@ -943,7 +942,7 @@ const AddStudent = () => {
     e.preventDefault();
     console.log('Form Data:', {
       dateOfBirth: formatDateOfBirth,
-      studentClass: classId,
+      studentClass: studentClass,
       age: numAge,
       profilePicture,
       medicalReport,
@@ -954,7 +953,7 @@ const AddStudent = () => {
 
     const formData = new FormData(); // Create a FormData object to send data and file
     formData.append("dateOfBirth", formatDateOfBirth);
-    formData.append("studentClass", classId);
+    formData.append("studentClass", studentClass);
     formData.append("age", numAge);
     formData.append("profilePicture", profilePicture ); // Append the uploaded picture file
     formData.append("medicalReport", medicalReport); // Append medical report file
@@ -1073,21 +1072,18 @@ const AddStudent = () => {
                   Class
                 </label>
 
-                <select
-                  name="classId"
-                  onChange={(e) => setClassId(e.target.value)}
-                  className="text-sm text-gray-600 px-4 py-2 outline-none border border-gray-300 rounded-lg"
+                <select 
+                  name="studentClass" 
+                  onChange={(e) => setStudentClass(parseInt(e.target.value, 10))}
                 >
                   {isClassLoading ? (
                     <Loader2 className="animate-spin" />
                   ) : (
                     <>
                       <option>Select Class</option>
-                      {data.map((classes) => (
-                        <option value={classes.id} key={classes.id}>
-                          {classes.name}
-                        </option>
-                      ))}
+                      {data.map((cls) => (
+                          <option value={cls.id} key={cls.id}>{cls.name}</option>
+                        ))}
                     </>
                   )}
                 </select>
