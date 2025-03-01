@@ -17,6 +17,7 @@ import { useGetAllClassesQuery } from "../../../app/api/classApi";
 import { useGetAllSubjectsQuery } from "../../../app/api/allSubjectApi";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function getColorByItemId(id) {
   switch (id) {
@@ -33,6 +34,7 @@ function getColorByItemId(id) {
   }
 }
 const Dashboard = () => {
+  const navigate = useNavigate();
   const { _ } = useGetUserProfileQuery();
   const { user, isLoading } = useSelector((state) => state.user);
   const { data: teachersData } = useGetAllTeachersQuery();
@@ -89,7 +91,18 @@ const Dashboard = () => {
           </>
         ) : (
           adminSummary.map((item) => (
-            <div className="card" key={item.id}>
+            <div className="card" key={item.id}
+            onClick={() => {
+              // Add click handlers for specific cards
+              if (item.id === 1) navigate("/admin/all-teachers");
+              if (item.id === 2) navigate("/admin/students");
+              if (item.id === 3) navigate("/admin/subjects");
+              if (item.id === 4) navigate("/admin/classes");
+            }}
+            style={{ 
+              // Add pointer cursor for clickable cards
+              cursor: item.id === 1 || item.id === 2 || item.id === 3 || item.id === 4 ?  "pointer" : "auto"
+            }}>
               <div className="user">
                 <div style={{ color: getColorByItemId(item.id) }}>
                   {item.icon}
