@@ -847,31 +847,21 @@ const statesWithLgas = {
     "Zurmi",
   ],
 };
+
+
 const AddStudent = () => {
   const navigate = useNavigate();
   const { data, isLoading: isClassLoading } = useGetAllClassesQuery();
   const [createStudent, { isLoading, isSuccess, error }] =
     useCreateStudentMutation();
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
-  const [studentClass, setStudentClass] = useState();
+  const [classId, setClassId] = useState();
   const [age, setAge] = useState();
-  const [lgas, setLgas] = useState([]); // Local Governments based on selected state
   const [profilePicture, setProfilePicture] = useState(null);
   const [medicalReport, setMedicalReport] = useState(null); // New state for medical report
   const [birthCertificate, setBirthCertificate] = useState(null); // New state for birth certificate
 
 
-   // Handle state selection to update LGAs
-   const handleStateChange = (e) => {
-    const selectedState = e.target.value;
-    setStudentDetails((prevValue) => ({
-      ...prevValue,
-      stateOfOrigin: selectedState,
-      lgaOfOrigin: "", // Reset LGA when state changes
-    }));
-    setLgas(statesWithLgas[selectedState] || []);
-  };
-  
   useEffect(() => {
     if (error) {
       toast.error(error.data.message);
@@ -888,6 +878,7 @@ const AddStudent = () => {
     firstName: "",
     middleName: "",
     otherNames: "",
+    studentClass: "",
     parentsNumber: "",
     gender: "",
     stateOfOrigin: "",
@@ -931,7 +922,7 @@ const AddStudent = () => {
   const handleClassChange = (e) => {
     const value = parseInt(e.target.value, 10);
     console.log('Selected Class ID:', value);  // Check the value of class ID
-    setStudentClass(value);
+    setClassId(value);
   };
   
 
@@ -942,7 +933,7 @@ const AddStudent = () => {
     e.preventDefault();
     console.log('Form Data:', {
       dateOfBirth: formatDateOfBirth,
-      studentClass: studentClass,
+      studentClass: classId,
       age: numAge,
       profilePicture,
       medicalReport,
@@ -953,7 +944,7 @@ const AddStudent = () => {
 
     const formData = new FormData(); // Create a FormData object to send data and file
     formData.append("dateOfBirth", formatDateOfBirth);
-    formData.append("studentClass", studentClass);
+    formData.append("studentClass", classId);
     formData.append("age", numAge);
     formData.append("profilePicture", profilePicture ); // Append the uploaded picture file
     formData.append("medicalReport", medicalReport); // Append medical report file
@@ -966,8 +957,6 @@ const AddStudent = () => {
     createStudent(formData); // Send form data including file
   };
 
-
-
   // console.log(studentDetails)
 
   
@@ -978,9 +967,9 @@ const AddStudent = () => {
         {/* heading */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
-          <img
-              src={profilePicture ? URL.createObjectURL(profilePicture) : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKEAAACUCAMAAADMOLmaAAAAMFBMVEXk5ueutLeqsbTP09Xn6erh4+THy83Bxsi6v8LV2NqyuLu2u77c3+DY29zLz9GorrLvMsi2AAADuUlEQVR4nO2b2Y7rIAxAWUxYk/z/3w7JbaetOm3AJDbS5Wg029ORCcbBrhCDwWAwGAwGg8FgMBgM/m8AhDHb1/Zbd2SnWU/WbVg7+dSdpLdBSqWU3L/nH8Em0Y0kpCWsm9sLag2L6cIRjJVvejfJMPEvNojpPXxPjkozrzXM8Yvf7uhYlxr0gd++1J5R0R4LZtaFyw/KBHMYJ54oGlcomBUthyKUC24LTa9YvMQ3NLViyS5+ZSZWNJV++aCmFYRYbUi7W2CpXeONmdAwBYSgjHRBhAkTQrkSHn8rRlBKR+WHDKGkS4oG9RTKbTvTCIJGCmZFQ6NYed49G9IUOfXHyQOahDMjd/IexEQgiN/JGxS7GbA7eY8hxYMILSEkSdqpyTBen2/ANxmG67dKfXH9yvUlGCxNgspfb9iUbHIFRmDYfQzxpzKVYf+r3P9OwVeHOwTZpvuM3f+pJ0Rb5UBg2FZ9UVyN9F/BCt/7W0DTm1SgeaXv/m20oUJcSRa55VaE6moJX96QXbcb5G6ORH7oICrCpgrulpgo1eygzhWC0vAZhCDR9eaduT6IRLebd6o7Koq8D17VGuVpMcPRhMOLIEuD2ZQrKsfSpAdRqki9jR8UzhHwLPGNkuNPsY2KbIAPRxNBMTEPLRn7rdBR68Q/nQbJfZxMk7wjVXcAvFV/OK7BUk9ffATE2wSiUk6bfkYkxT5l6ifnYgwxOmcnD/yTh2/APqlrTDKiO72bkHmQ/9j+24NntjDJ68VaF0PYp3SVDGFf6UXPhtkSIGn7EHvNNP8miqNbZp7x7PzIzYuT32Zgf5P2GiZPPfoMIsdO/pUEP1iqHEtDFsqcV1yF3V0yn9AkGRLEPIVqvV9L5y92BJjjp0O40DFcOaANRoeG+9e7pJouqscAdN3r3WfHcE1J5mve7Q45/UMNkNpaom+s8dxbHFiOin0E7rwtAym2b5B3ts9dnCSomxLMN0d7ThhPfgJfFE94EYSK6X+MYvOVWH4ErxTcaOsPNLa7i1hb7kxgvtxPNrUIwFMINtx+AuKuGseKUwRc0wSFQm2XiivWdjAD+ZU36c1Uny64z3fgqW/sJlI/WZ9zqNdY1k7kg76i3DqgqqOBnhNooSblUG+TGxWbhSWEOSkWB5EphBVN/La5+gZKy1mKovADhaUiOC7B0gnPVP+Jy7Moez9lXOTSLmrbwHUjRTHkewxzSiw6nDlDWDTyjh07O4WilyrGjSKLMiIsq2Kk4OCDWbNS8BzuHUM2SgQHg8HgCn4AIlEx+zn49rYAAAAASUVORK5CYII="}
-              alt="Profile"
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKEAAACUCAMAAADMOLmaAAAAMFBMVEXk5ueutLeqsbTP09Xn6erh4+THy83Bxsi6v8LV2NqyuLu2u77c3+DY29zLz9GorrLvMsi2AAADuUlEQVR4nO2b2Y7rIAxAWUxYk/z/3w7JbaetOm3AJDbS5Wg029ORCcbBrhCDwWAwGAwGg8FgMBgM/m8AhDHb1/Zbd2SnWU/WbVg7+dSdpLdBSqWU3L/nH8Em0Y0kpCWsm9sLag2L6cIRjJVvejfJMPEvNojpPXxPjkozrzXM8Yvf7uhYlxr0gd++1J5R0R4LZtaFyw/KBHMYJ54oGlcomBUthyKUC24LTa9YvMQ3NLViyS5+ZSZWNJV++aCmFYRYbUi7W2CpXeONmdAwBYSgjHRBhAkTQrkSHn8rRlBKR+WHDKGkS4oG9RTKbTvTCIJGCmZFQ6NYed49G9IUOfXHyQOahDMjd/IexEQgiN/JGxS7GbA7eY8hxYMILSEkSdqpyTBen2/ANxmG67dKfXH9yvUlGCxNgspfb9iUbHIFRmDYfQzxpzKVYf+r3P9OwVeHOwTZpvuM3f+pJ0Rb5UBg2FZ9UVyN9F/BCt/7W0DTm1SgeaXv/m20oUJcSRa55VaE6moJX96QXbcb5G6ORH7oICrCpgrulpgo1eygzhWC0vAZhCDR9eaduT6IRLebd6o7Koq8D17VGuVpMcPRhMOLIEuD2ZQrKsfSpAdRqki9jR8UzhHwLPGNkuNPsY2KbIAPRxNBMTEPLRn7rdBR68Q/nQbJfZxMk7wjVXcAvFV/OK7BUk9ffATE2wSiUk6bfkYkxT5l6ifnYgwxOmcnD/yTh2/APqlrTDKiO72bkHmQ/9j+24NntjDJ68VaF0PYp3SVDGFf6UXPhtkSIGn7EHvNNP8miqNbZp7x7PzIzYuT32Zgf5P2GiZPPfoMIsdO/pUEP1iqHEtDFsqcV1yF3V0yn9AkGRLEPIVqvV9L5y92BJjjp0O40DFcOaANRoeG+9e7pJouqscAdN3r3WfHcE1J5mve7Q45/UMNkNpaom+s8dxbHFiOin0E7rwtAym2b5B3ts9dnCSomxLMN0d7ThhPfgJfFE94EYSK6X+MYvOVWH4ErxTcaOsPNLa7i1hb7kxgvtxPNrUIwFMINtx+AuKuGseKUwRc0wSFQm2XiivWdjAD+ZU36c1Uny64z3fgqW/sJlI/WZ9zqNdY1k7kg76i3DqgqqOBnhNooSblUG+TGxWbhSWEOSkWB5EphBVN/La5+gZKy1mKovADhaUiOC7B0gnPVP+Jy7Moez9lXOTSLmrbwHUjRTHkewxzSiw6nDlDWDTyjh07O4WilyrGjSKLMiIsq2Kk4OCDWbNS8BzuHUM2SgQHg8HgCn4AIlEx+zn49rYAAAAASUVORK5CYII="
+              alt="img"
               className="w-[50px] h-[50px] sm:w-[80px] sm:h-[80px] rounded-full"
             />
 
@@ -991,17 +980,7 @@ const AddStudent = () => {
           </div>
 
           <div>
-            <Button variant="outline" onClick={() => document.getElementById('picture').click()}>
-              Upload Image
-              <AiOutlineCloudUpload className="ml-2" />
-            </Button>
-            <input
-              id="picture"
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
+            <Button variant="outline">Upload Image</Button>
           </div>
         </div>
 
@@ -1072,18 +1051,21 @@ const AddStudent = () => {
                   Class
                 </label>
 
-                <select 
-                  name="studentClass" 
-                  onChange={(e) => setStudentClass(parseInt(e.target.value, 10))}
+                <select
+                  name="classId"
+                  onChange={(e) => setClassId(e.target.value)}
+                  className="text-sm text-gray-600 px-4 py-2 outline-none border border-gray-300 rounded-lg"
                 >
                   {isClassLoading ? (
                     <Loader2 className="animate-spin" />
                   ) : (
                     <>
                       <option>Select Class</option>
-                      {data.map((cls) => (
-                          <option value={cls.id} key={cls.id}>{cls.name}</option>
-                        ))}
+                      {data.map((classes) => (
+                        <option value={classes.id} key={classes.id}>
+                          {classes.name}
+                        </option>
+                      ))}
                     </>
                   )}
                 </select>
@@ -1207,56 +1189,20 @@ const AddStudent = () => {
           </div>
 
           <div className="flex  gap-6 justify-between items-center mt-6">
-          <div className="w-[400px] border border-gray-300 p-6 rounded-lg flex justify-center items-center flex-col gap-2">
-    {/* Hidden file input for Birth Certificate */}
-    <input
-      type="file"
-      id="birthCertificate"
-      className="hidden"
-      onChange={handleBirthCertificateChange}
-    />
+            <div className=" w-[400px] border border-gray-300 p-6 rounded-lg flex justify-center items-center flex-col gap-2">
+              <input type="file" className="hidden" />
 
-    {/* Clickable upload icon for Birth Certificate */}
-    <AiOutlineCloudUpload
-      size={30}
-      className="cursor-pointer"
-      onClick={() => document.getElementById('birthCertificate').click()}
-    />
-    <p className="text-sm">Upload Birth Certificate</p>
+              <AiOutlineCloudUpload size={30} className="cursor-pointer" />
+              <p className="text-sm">Upload Birth Certificate</p>
+            </div>
 
-    {/* Display the file name after selection */}
-    {birthCertificate && (
-      <p className="text-sm mt-2 text-green-600">
-        {birthCertificate.name}
-      </p>
-    )}
-  </div>
+            <div className=" w-[400px] border border-gray-300 p-6 rounded-lg flex justify-center items-center flex-col gap-2">
+              <input type="file" className="hidden" />
 
-  <div className="w-[400px] border border-gray-300 p-6 rounded-lg flex justify-center items-center flex-col gap-2">
-    {/* Hidden file input for Medical Report */}
-    <input
-      type="file"
-      id="medicalReport"
-      className="hidden"
-      onChange={handleMedicalReportChange}
-    />
-
-    {/* Clickable upload icon for Medical Report */}
-    <AiOutlineCloudUpload
-      size={30}
-      className="cursor-pointer"
-      onClick={() => document.getElementById('medicalReport').click()}
-    />
-    <p className="text-sm">Upload Medical Report</p>
-
-    {/* Display the file name after selection */}
-    {medicalReport && (
-      <p className="text-sm mt-2 text-green-600">
-        {medicalReport.name}
-      </p>
-    )}
-  </div>
-</div>
+              <AiOutlineCloudUpload size={30} className="cursor-pointer" />
+              <p className="text-sm">Upload Medical Report</p>
+            </div>
+          </div>
 
           <Button className="mt-4 bg-[#4a3aff] hover:bg-[#5144e3]">
             {isLoading ? <Loader className="animate-spin" /> : "Add Student"}
