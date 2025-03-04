@@ -13,6 +13,7 @@ import { useCreateSubjectMutation } from "../../../../app/api/allSubjectApi";
 import { useGetAllClassesQuery } from "../../../../app/api/classApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { showToast } from "../../../../components/ToastMessages/Notification";
 
 const AddSubject = () => {
   const navigate = useNavigate();
@@ -32,11 +33,11 @@ const AddSubject = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error.data.message);
+      showToast("error", "Error!", error?.data?.message || "Something went wrong");
     }
-
+  
     if (isSuccess) {
-      toast.success("Subject Created Successfully");
+      showToast("success", "Success!", "Subject Created Successfully");
       setOpenDialog(false);
       setSubjectDetails({
         subjectName: "",
@@ -47,6 +48,7 @@ const AddSubject = () => {
       });
     }
   }, [error, isSuccess]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;

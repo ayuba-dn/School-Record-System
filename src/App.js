@@ -43,6 +43,7 @@ import { ManageResults } from "./pages/teachers/ManageResults";
 import { UploadResults } from "./pages/teachers/UploadResults";
 import TeacherLogin from "./pages/onboarding/TeacherLogin";
 import EditTeacherDetails from "./pages/admin/Pages/teachers/EditTeacher";
+import ToastMessage from "./components/ToastMessages/Notification";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
         transition={Zoom}
       />
       <Routes>
+        {/* <ToastMessage /> */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/select-preference" element={<SelectPreference />} />
         <Route path="/login" element={<LoginPage />} />

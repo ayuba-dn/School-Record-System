@@ -18,6 +18,7 @@ import { useDeleteSessionMutation } from "../app/api/sessionsApi";
 import { useDeleteTeacherMutation } from "../app/api/teachersApi";
 import { useDeleteStudentMutation } from "../app/api/studentsApi";
 import { useDeleteAssessmentMutation } from "../app/api/assessmentsApi";
+import { showToast } from "./ToastMessages/Notification";
 
 const DeleteModal = ({ id, type }) => {
   const [deleteClasses, { isLoading, error, isSuccess }] =
@@ -65,63 +66,42 @@ const DeleteModal = ({ id, type }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
-    if (error) {
-      toast.error(error.data.message);
-    }
-    if (subjectError) {
-      toast.error(subjectError.data.message);
-    }
-    if (sessionError) {
-      toast.error(sessionError.data.message);
-    }
-    if (isTeacherError) {
-      toast.error(sessionError.data.message);
-    }
-    if (studentError) {
-      toast.error(studentError.data.message);
-    }
-    if (assessmentsError) {
-      toast.error(assessmentsError.data.message);
-    }
-
-    if (isSuccess) {
-      toast.success("Class Deleted Successfully");
-      setOpenDialog(false);
-    }
-    if (isSubjectSuccess) {
-      toast.success("Subject Deleted Successfully");
-      setOpenDialog(false);
-    }
-    if (isSessionSuccess) {
-      toast.success("Session Deleted Successfully");
-      setOpenDialog(false);
-    }
-    if (isTeacherSuccess) {
-      toast.success("Teacher Deleted Successfully");
-      setOpenDialog(false);
-    }
-    if (isStudentSuccess) {
-      toast.success("Student Deleted Successfully");
-      setOpenDialog(false);
-    }
-    if (isAssessmentsSuccess) {
-      toast.success("Assessment Deleted Successfully");
-      setOpenDialog(false);
-    }
+    // 🔹 Handle Errors
+    const errors = [
+      { condition: error, message: error?.data?.message || "An error occurred" },
+      { condition: subjectError, message: subjectError?.data?.message || "An error occurred" },
+      { condition: sessionError, message: sessionError?.data?.message || "An error occurred" },
+      { condition: isTeacherError, message: sessionError?.data?.message || "An error occurred" },
+      { condition: studentError, message: studentError?.data?.message || "An error occurred" },
+      { condition: assessmentsError, message: assessmentsError?.data?.message || "An error occurred" },
+    ];
+  
+    errors.forEach(({ condition, message }) => {
+      if (condition) showToast("error", "Error", message);
+    });
+  
+    // 🔹 Handle Success Messages
+    const successMessages = [
+      { condition: isSuccess, message: "Class Deleted Successfully" },
+      { condition: isSubjectSuccess, message: "Subject Deleted Successfully" },
+      { condition: isSessionSuccess, message: "Session Deleted Successfully" },
+      { condition: isTeacherSuccess, message: "Teacher Deleted Successfully" },
+      { condition: isStudentSuccess, message: "Student Deleted Successfully" },
+      { condition: isAssessmentsSuccess, message: "Assessment Deleted Successfully" },
+    ];
+  
+    successMessages.forEach(({ condition, message }) => {
+      if (condition) {
+        showToast("success", "Success", message);
+        setOpenDialog(false);
+      }
+    });
+  
   }, [
-    error,
-    subjectError,
-    sessionError,
-    studentError,
-    isTeacherError,
-    assessmentsError,
-    isSuccess,
-    isSubjectSuccess,
-    isSessionSuccess,
-    isTeacherSuccess,
-    isStudentSuccess,
-    isAssessmentsSuccess,
+    error, subjectError, sessionError, studentError, isTeacherError, assessmentsError,
+    isSuccess, isSubjectSuccess, isSessionSuccess, isTeacherSuccess, isStudentSuccess, isAssessmentsSuccess,
   ]);
+  
 
   const handleDeleteClass = () => {
     deleteClasses(id);

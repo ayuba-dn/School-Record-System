@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { useCreateSessionMutation } from "../../../../app/api/sessionsApi";
+import { showToast } from "../../../../components/ToastMessages/Notification";
 
 const AddSession = () => {
   const navigate = useNavigate();
@@ -24,12 +25,12 @@ const AddSession = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error.data.message);
+      showToast("error", "Session Creation Failed", error.data?.message || "An unexpected error occurred");
+      console.log(error.data);
     }
     if (isSuccess) {
-      toast.success("Session Created Successfully");
+      showToast("success", "Success", "Session Created Successfully");
       setOpenDialog(false);
-      //   navigate("/admin/academic-sessions")
     }
   }, [error, isSuccess]);
 

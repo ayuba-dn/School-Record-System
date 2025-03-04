@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader, Loader2 } from "lucide-react";
 import { useGetAllClassesQuery } from "../../../../app/api/classApi";
 import DatePicker from "react-datepicker";
+import ToastMessage, { showToast } from "../../../../components/ToastMessages/Notification";
 
 // Example states and LGAs data (can be replaced with an API call)
 const statesWithLgas = {
@@ -874,14 +875,15 @@ const AddStudent = () => {
   
   useEffect(() => {
     if (error) {
-      toast.error(error.data.message);
+      showToast("error", "An error occurred. Please try again");
+      console.log(error.data);
     }
 
     if (isSuccess) {
-      toast.success("Student Created Successfully");
+      showToast("success","Student Created Successfully");
       navigate("/admin/students");
     }
-  }, [isSuccess]);
+  }, [error, isSuccess]);
 
   const [studentDetails, setStudentDetails] = useState({
     studentId: "",
@@ -975,6 +977,8 @@ const AddStudent = () => {
   return (
     <section className=" max-w-7xl mx-auto">
       <div className="bg-white  min-h-screen px-4 sm:px-10 py-6 flex flex-col gap-6">
+        {/* Notification Message */}
+        <ToastMessage/>
         {/* heading */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
