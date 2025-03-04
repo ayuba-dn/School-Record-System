@@ -20,6 +20,7 @@ import {
 import { useGetAllSubjectsQuery } from "../../app/api/allSubjectApi";
 import { useCreateAssessmentMutation } from "../../app/api/assessmentsApi";
 import "./AssessmentModal.css";
+import { showToast } from "../ToastMessages/Notification";
 
 const AssessmentsModal = () => {
   const { subjectId: routeSubjectId, classId } = useParams();
@@ -97,57 +98,54 @@ const AssessmentsModal = () => {
       term: "",
     })); // Clear term when session changes
   };
+// Select last term when terms are available
+useEffect(() => {
+  if (sessionTermsData?.length > 0) {
+    const lastTerm = sessionTermsData[sessionTermsData.length - 1].id;
+    setAssessment((prev) => ({ ...prev, term: lastTerm }));
+  }
+}, [sessionTermsData]);
 
-  // Select last term when terms are available
-  useEffect(() => {
-    if (sessionTermsData && sessionTermsData.length > 0) {
-      const lastTerm = sessionTermsData[sessionTermsData.length - 1].id;
-      setAssessment((prev) => ({ ...prev, term: lastTerm }));
-    }
-  }, [sessionTermsData]);
+const handleChange = (e) => {
+  setAssessment({ ...assessment, [e.target.name]: e.target.value });
+};
 
-  const handleChange = (e) => {
-    setAssessment({ ...assessment, [e.target.name]: e.target.value });
+const handleSubmit = async () => {
+  const assessmentData = {
+    name: assessment.name,
+    subjectId: parseInt(assessment.subject),
+    classId: parseInt(assessment.class),
+    sessionId: parseInt(assessment.session),
+    termId: parseInt(assessment.term),
+    weight: parseInt(assessment.weight),
   };
 
-  const handleSubmit = async () => {
-    const assessmentData = {
-      name: assessment.name,
-      subjectId: parseInt(assessment.subject),
-      classId: parseInt(assessment.class),
-      sessionId: parseInt(assessment.session),
-      termId: parseInt(assessment.term),
-      weight: parseInt(assessment.weight),
-    };
+  try {
+    await createAssessment(assessmentData).unwrap();
+    showToast("success", "Success", "Assessment created successfully");
+  } catch (error) {
+    showToast("error", "Error", "Error creating assessment");
+  }
+};
 
-    try {
-      await createAssessment(assessmentData).unwrap();
-      toast.success("Assessment created successfully", {
-        position: "top-center",
-      });
-    } catch (error) {
-      toast.error("Error creating assessment", { position: "top-center" });
-    }
-  };
+// Handle API errors
+useEffect(() => {
+  const errors = [
+    { condition: classesError, message: "Error fetching classes" },
+    { condition: sessionsError, message: "Error fetching sessions" },
+    { condition: subjectsError, message: "Error fetching subjects" },
+    { condition: termsError, message: "Error fetching terms" },
+  ];
 
-  useEffect(() => {
-    if (classesError) {
-      toast.error("Error fetching classes", { position: "top-center" });
-    }
-    if (sessionsError) {
-      toast.error("Error fetching sessions", { position: "top-center" });
-    }
-    if (subjectsError) {
-      toast.error("Error fetching subjects", { position: "top-center" });
-    }
-    if (termsError) {
-      toast.error("Error fetching terms", { position: "top-center" });
-    }
-  }, [classesError, sessionsError, subjectsError, termsError]);
+  errors.forEach(({ condition, message }) => {
+    if (condition) showToast("error", "Error", message);
+  });
 
-  const filteredSubjects = subjectId
-    ? subjectsData?.filter((subject) => subject.id === subjectId)
-    : subjectsData;
+}, [classesError, sessionsError, subjectsError, termsError]);
+
+const filteredSubjects = subjectId
+  ? subjectsData?.filter((subject) => subject.id === subjectId)
+  : subjectsData;
 
   return (
     <Dialog>

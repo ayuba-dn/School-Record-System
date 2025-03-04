@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import ToastMessage, { showToast } from "../../../../components/ToastMessages/Notification";
 // import { classOptions } from '../../data'
 
 const AddTeacher = () => {
@@ -26,14 +27,15 @@ const AddTeacher = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error.data.message);
+      showToast("error", "An error occured");
+      console.log(error.data);
     }
 
     if (isSuccess) {
-      toast.success("Teacher Created Successfully");
       navigate("/admin/all-teachers");
+      showToast("success", "Teacher added successfully");
     }
-  }, [isSuccess]);
+  }, [error, isSuccess]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,6 +54,9 @@ const AddTeacher = () => {
   return (
     <section className=" max-w-7xl mx-auto">
       <div className="bg-white  min-h-screen px-4 sm:px-10 py-6 flex flex-col gap-6">
+        {/* Toast Component for Notifications */}
+
+        <ToastMessage />
         {/* heading */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
@@ -208,7 +213,7 @@ const AddTeacher = () => {
 
               <div className="flex flex-col gap-2 col-span-6">
                 <label htmlFor="phoneNumber" className="text-sm">
-                  Teacher's Number
+                  Teacher&apos;s Number
                 </label>
                 <input
                   type="text"

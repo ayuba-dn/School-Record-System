@@ -11,6 +11,7 @@ import { Loader2, Plus } from "lucide-react";
 import { useCreateClassMutation } from "../../../../app/api/classApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { showToast } from "../../../../components/ToastMessages/Notification";
 
 const AddClasss = () => {
   const navigate = useNavigate();
@@ -21,16 +22,16 @@ const AddClasss = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error.data.message);
-      // console.log(error.data)
+      showToast("error", "An error occurred", error?.data?.message || "Something went wrong");
     }
-
+  
     if (isSuccess) {
-      toast.success("Class Created Successfully");
+      showToast("success", "Success!", "Class Created Successfully");
       setClassName("");
       setOpenDialog(false);
     }
   }, [error, isSuccess]);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { notification } from "antd"; // ✅ Import Ant Design Notification
 import { Logo } from "../../components/images";
 import { Button } from "../../components/ui/button";
 import { MdPassword } from "react-icons/md";
@@ -8,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../app/api/authApi";
 import { useDispatch } from "react-redux";
 import { Loader2 } from "lucide-react";
+import ToastMessage, { showToast } from "../../components/ToastMessages/Notification";
+
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -21,21 +22,13 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (error) {
-      notification.error({
-        message: "Login Failed",
-        description: error.data?.message || "An unexpected error occurred",
-        duration: 3, // Auto close after 3 seconds
-      });
+      showToast("error", "Login Failed", error.data?.message || "An unexpected error occurred");
       console.log(error.data);
     }
 
     if (isSuccess) {
       navigate("/admin");
-      notification.success({
-        message: "Login Successful",
-        description: "You have successfully logged in!",
-        duration: 3,
-      });
+      showToast("success", "Login Successful", "You have successfully logged in!");
     }
   }, [error, isSuccess]);
 
@@ -50,11 +43,7 @@ const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!credentials.password.trim()) {
-      return notification.warning({
-        message: "Missing Password",
-        description: "Please enter your password before logging in.",
-        duration: 3,
-      });
+      return showToast("warning", "Missing Password", "Please enter your password before logging in.");
     }
     login(credentials);
   };
@@ -63,6 +52,9 @@ const LoginPage = () => {
 
   return (
     <div className="w-full h-screen min-h-screen flex flex-col sm:flex-row bg-white ">
+      {/* Toast Component for Notifications */}
+      <ToastMessage />
+
       <div className="flex-1 h-32 lg:h-full hidden sm:flex">
         <div className="relative flex h-32 items-end bg-gray-900 lg:h-full ">
           <img
