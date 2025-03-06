@@ -3,6 +3,7 @@ import { ArrowRightSquare, Loader2 } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import AddSession from "./AddSession";
+import CreateTerms from "./CreateTerms";
 import { useGetAllSessionsQuery } from "../../../../app/api/sessionsApi";
 import SingleSession from "./SingleSession";
 import DeleteModal from "../../../../components/DeleteModal";
@@ -47,6 +48,7 @@ const AcademicSessions = () => {
 
           <div className="flex items-center gap-2">
             <AddSession />
+            <CreateTerms />
           </div>
         </div>
 
@@ -118,13 +120,16 @@ const AcademicSessions = () => {
                     <DeleteModal type="sessions" id={session.id} />
                     <SingleSession session={session} />
                   </div>
-                  <Button
-                    size="small"
-                    endIcon={<ArrowRightSquare size={16} />}
-                    onClick={() => navigate(`/sessions/${session.id}/terms`)}
-                  >
-                    Manage
-                  </Button>
+                  {/* <div className="flex gap-2">
+                    <CreateTerms sessionId={session.id} />
+                    <Button
+                      size="small"
+                      endIcon={<ArrowRightSquare size={16} />}
+                      onClick={() => navigate(`/sessions/${session.id}/terms`)}
+                    >
+                      Manage
+                    </Button>
+                  </div> */}
                 </div>
               </div>
             ))}
