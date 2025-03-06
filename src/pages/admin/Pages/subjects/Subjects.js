@@ -6,8 +6,9 @@ import {
   useGetAllSubjectsQuery,
   useDeleteSubjectMutation,
 } from "../../../../app/api/allSubjectApi";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash } from "lucide-react";
 import { useEffect } from "react";
+import DeleteModal from "../../../../components/DeleteModal";
 import { toast } from "react-toastify";
 
 const Subjects = () => {
@@ -57,18 +58,18 @@ const Subjects = () => {
     {
       field: "delete",
       headerName: "Delete",
-      width: 200,
+      width: 100,
       renderCell: (params) => (
         <div className="flex gap-2">
           <button
             onClick={() => handleDelete(params.row.id)}
             disabled={deletingId === params.row.id}
-            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 disabled:bg-red-300"
+            className="text-red-500 hover:text-red-600 disabled:text-red-300"
           >
             {deletingId === params.row.id ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              "Delete"
+              <DeleteModal className="w-5 h-5" />
             )}
           </button>
         </div>
