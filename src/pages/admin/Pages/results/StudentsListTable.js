@@ -53,7 +53,7 @@ export const StudentsListTable = ({ classResultsData }) => {
             </th>
             
           </tr>
-          {/* <tr className="*:border-[1px] bg-gray-500 text-left *:p-4 *:font-medium text-white">
+          <tr className="*:border-[1px] bg-gray-500 text-left *:p-4 *:font-medium text-white">
             <th className="sticky left-[-2rem] w-[5rem] bg-inherit z-10"></th>
             <th className="sticky left-[3rem] bg-inherit z-10 border-r-[1px] border-r-primary/[.5]"></th>
             {uniqueSubjects.map((subjectName, subjIndex) => (
@@ -69,7 +69,7 @@ export const StudentsListTable = ({ classResultsData }) => {
                 {subjectName}
               </th>
             ))}
-          </tr> */}
+          </tr>
           <tr className="*:border-[1px] bg-gray-500 text-left *:p-4 *:font-medium text-white">
             <th className="sticky left-[-2rem] w-[5rem] bg-inherit z-10"></th>
             <th className="sticky left-[3rem] bg-inherit z-10 border-r-[1px] border-r-primary/[.5]"></th>
