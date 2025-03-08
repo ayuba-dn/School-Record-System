@@ -1,107 +1,121 @@
 .sampleResult {
   background: #fff;
-  padding: 2rem 2.5vw;
+  width: 21cm; /* A4 width */
+  min-height: 29.7cm; /* A4 height */
+  margin: 0 auto;
+  padding: 1.5cm;
+  box-sizing: border-box;
+  position: relative;
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
+/* Page Layout */
+.pageContainer {
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
 .sampleResult table {
   border-collapse: collapse;
   width: 100%;
   border: 1px solid black;
 }
-.sampleResult td,
-th {
-  border: 1px solid black;
-}
+
+/* Header adjustments */
 .sampleResult .header {
-  margin-bottom: 8rem;
+  margin-bottom: 3rem; /* Reduced from 8rem */
   font-size: 1.8rem;
 }
-.sampleResult .header h3,
-.sampleResult .header h1 {
-  margin: 0;
-}
-.sampleResult .header img {
-  width: 15rem;
-  height: auto;
-}
-.sampleResult .header h3 {
-  font-weight: 600;
-  color: #333333;
-}
 
-/* top summary */
+/* Top summary grid adjustments */
 .sampleResult .topSummary {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  font-size: 1.6rem;
-  grid-auto-flow: row dense;
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  font-size: 1.4rem; /* Reduced from 1.6rem */
 }
 
-/* label span  */
-.sampleResult .topSummary div span:nth-of-type(1) {
-  font-weight: 700;
-}
-.sampleResult .topSummary div span:nth-of-type(2) {
-  text-transform: uppercase;
-  text-decoration: underline;
-  font-weight: 500;
-}
+/* Sheet container spacing */
 .sampleResult .sheetContainer {
-  margin: 4rem 0;
-  font-size: 1.4rem;
+  margin: 2rem 0; /* Reduced from 4rem */
+  font-size: 1.2rem; /* Reduced from 1.4rem */
 }
 
-.sampleResult .sheetContainer table td,
-.sampleResult .sheetContainer table th {
-  padding: 0.5rem;
-}
-.sampleResult .sheetContainer .bottomTable {
-  margin: 4rem 0;
-}
-.sampleResult .sheetContainer .bottomTable div {
-  display: flex;
-  gap: 2rem;
-}
-
-.sampleResult .sheetContainer .bottomTable p span:nth-of-type(1) {
-  font-weight: 600;
-}
-
-.sampleResult .sheetContainer .bottomTable p span:nth-of-type(2) {
-  font-weight: 700;
-  text-decoration: underline;
-  font-size: 1.1em;
-}
-
-.sampleResult .stamp {
-  display: flex;
-  justify-content: flex-end;
-}
+/* Stamp positioning */
 .sampleResult .stamp p {
-  width: 30rem;
-  text-align: center;
-  font-size: 1.6rem;
-  border-top: 1px solid black;
-  padding-top: 1rem;
-  margin-top: 10rem;
-}
-.sampleResult .finalGrading {
-  border: 1px solid black;
-  padding: 1rem;
-  font-size: 1.6rem;
-
-  text-align: center;
-  margin-bottom: 1rem;
+  margin-top: 2rem; /* Reduced from 10rem */
+  width: 25%; /* More reasonable width */
 }
 
-.sampleResult .footer {
-  text-align: center;
-  font-weight: 500;
-  font-size: 1.4rem;
+/* Add these print-specific styles */
+@media print {
+  .pageContainer {
+    min-height: auto;
+    display: block;
+  }
+  
+  .sampleResult {
+    min-height: 29.7cm;
+    padding: 1cm;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+  
+  .sampleResult .header {
+    margin-bottom: 2rem;
+  }
+  
+  .sampleResult .sheetContainer {
+    margin: 1rem 0;
+  }
 }
 
-/* UTILS */
+/* Vertical text alignment fix */
 .sampleResult .vertical-text {
-  writing-mode: vertical-lr;
-  transform: scale(-1);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+/* Footer positioning */
+.sampleResult .footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  margin-top: auto; /* Pushes footer to bottom */
+}
+
+/* Final grading section */
+.sampleResult .finalGrading {
+  margin-top: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Force table row heights */
+.sampleResult .sheetContainer table tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Signature container spacing */
+.sampleResult .signatureBlock {
+  padding: 1rem 0;
+}
+
+.sampleResult .header h1 {
+  color: blue;
+}
+
+@media print {
+  .sampleResult .header h1 {
+    color: blue !important;
+  }
 }

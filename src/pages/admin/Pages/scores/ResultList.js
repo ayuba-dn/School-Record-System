@@ -147,7 +147,7 @@ export const ResultList = () => {
     <>
       <Outlet />
       <div>
-        <h1 className="font-thin font-rubik text-[2.4rem] mb-4">Score Sheet</h1>
+        <h1 className="font-thin font-rubik text-[2.4rem] mb-4"></h1>
 
         <div className="flex-col flex gap-4 md:flex-row mb-8">
           {/* filters container  */}
