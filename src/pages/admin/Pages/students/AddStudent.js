@@ -10,7 +10,8 @@ import DatePicker from "react-datepicker";
 import ToastMessage, {
   showToast,
 } from "../../../../components/ToastMessages/Notification";
-import { statesWithLgas } from "../../../../data/statesWithLgas";
+import { statesWithLgas } from "./statesWithLgas";
+
 // Example states and LGAs data (can be replaced with an API call)
 
 const AddStudent = () => {
