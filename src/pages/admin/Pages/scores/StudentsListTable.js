@@ -16,7 +16,7 @@ export const StudentsListTable = ({ classResultsData }) => {
     student.subjects.map((subject) => ({
       subjectName: subject.subjectName,
       assessments: subject.assessments,
-    })),
+    }))
   );
 
   // Get unique subjects for headers
@@ -26,7 +26,7 @@ export const StudentsListTable = ({ classResultsData }) => {
 
   // Filter students by name based on the search query
   const filteredStudents = classResultsData.filter((student) =>
-    student.studentName.toLowerCase().includes(searchQuery.toLowerCase()),
+    student.studentName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -45,25 +45,14 @@ export const StudentsListTable = ({ classResultsData }) => {
       <table className="w-full min-w-[50rem]">
         <thead>
           <tr className="*:text-center *:border-[1px] bg-blue_primary text-left *:p-4 *:font-medium text-white">
-            <th className="sticky left-[-2rem] w-[5rem] bg-inherit z-10">
-              S/N
-            </th>
-            <th className="sticky left-[3rem] bg-inherit z-10 border-r-[1px] border-r-primary/[.5]">
-              Name
-            </th>
-            <th className="bg-inherit z-10" colSpan={uniqueSubjects.length}>
-              Subjects
-            </th>
-          </tr>
-          <tr className="*:border-[1px] bg-gray-500 text-left *:p-4 *:font-medium text-white">
-            <th className="sticky left-[-2rem] w-[5rem] bg-inherit z-10"></th>
-            <th className="sticky left-[3rem] bg-inherit z-10 border-r-[1px] border-r-primary/[.5]"></th>
+            <th className="sticky left-[-2rem] w-[5rem] bg-inherit z-10">S/N</th>
+            <th className="sticky left-[3rem] bg-inherit z-10 border-r-[1px] border-r-primary/[.5]">Name</th>
             {uniqueSubjects.map((subjectName, subjIndex) => (
               <th
                 key={subjIndex}
                 colSpan={
                   classResultsData[0].subjects.find(
-                    (s) => s.subjectName === subjectName,
+                    (s) => s.subjectName === subjectName
                   ).assessments.length
                 }
                 className="text-center"
@@ -72,6 +61,7 @@ export const StudentsListTable = ({ classResultsData }) => {
               </th>
             ))}
           </tr>
+
           <tr className="*:border-[1px] bg-gray-500 text-left *:p-4 *:font-medium text-white">
             <th className="sticky left-[-2rem] w-[5rem] bg-inherit z-10"></th>
             <th className="sticky left-[3rem] bg-inherit z-10 border-r-[1px] border-r-primary/[.5]"></th>
@@ -79,13 +69,10 @@ export const StudentsListTable = ({ classResultsData }) => {
               classResultsData[0].subjects
                 .find((s) => s.subjectName === subjectName)
                 .assessments.map((assessment, assIndex) => (
-                  <th
-                    key={assIndex}
-                    className="[writing-mode:vertical-rl] scale-[-1]"
-                  >
+                  <th key={assIndex} className="[writing-mode:vertical-rl] scale-[-1]">
                     {assessment.name}
                   </th>
-                )),
+                ))
             )}
           </tr>
         </thead>
@@ -112,15 +99,13 @@ export const StudentsListTable = ({ classResultsData }) => {
               </td>
               {uniqueSubjects.map((subjectName) => {
                 const studentSubject = student.subjects.find(
-                  (s) => s.subjectName === subjectName,
+                  (s) => s.subjectName === subjectName
                 );
                 return studentSubject ? (
                   studentSubject.assessments.map((assessment, assIndex) => (
                     <td key={assIndex} className="p-2 min-w-[5rem]">
                       <ScoreInputField
-                        value={
-                          assessment.score === "N/A" ? "" : assessment.score
-                        }
+                        value={assessment.score === "N/A" ? "" : assessment.score}
                         name={assessment.name}
                         disabled={studentEditIndex !== studentIndex}
                         handleChange={(e) => {
