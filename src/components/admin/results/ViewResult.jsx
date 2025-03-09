@@ -68,7 +68,7 @@ export const ViewResult = ({ studentResultsData, session, year, studentClass, te
           <table>
             <thead>
               <tr>
-                <th rowSpan="2">
+                <th rowspan="2">
                   <img src={SchoolImg} alt="school" />
                 </th>
                 <th>
@@ -191,23 +191,23 @@ export const ViewResult = ({ studentResultsData, session, year, studentClass, te
               <tr>
                 <td>
                   <p>
-                    <span>Class Teacher&apos;s remarks: </span>
-                    <span>________________________________________</span>
+                    <span>Class Teacher's remarks: </span>
+                    <span>---</span>
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
                   <p>
-                    <span>Class Teacher&apos;s Name and signature: </span>
-                    <span>________________________________________</span>
+                    <span>Class Teacher's Name and signature: </span>
+                    <span>--</span>
                   </p>
                 </td>
               </tr>
               <tr>
                 <td>
                   <p>
-                    <span>Head teacher&apos;s remarks: </span>
+                    <span>Head teacher's remarks: </span>
                     <span>{generateHeadTeacherRemark(position, totalStudentsCount)}</span>
                   </p>
                 </td>
@@ -215,7 +215,7 @@ export const ViewResult = ({ studentResultsData, session, year, studentClass, te
               <tr>
                 <td>
                   <p>
-                    <span>Head teacher&apos;s name and signature: </span>
+                    <span>Head teacher's name and signature: </span>
                     <span>{headerTeacher?.name}</span>
                   </p>
                 </td>
@@ -240,9 +240,6 @@ export const ViewResult = ({ studentResultsData, session, year, studentClass, te
         <div className={styles.footer}>
           If you obey me and keep my covenant you will be a peculiar treasure to me says the Lord. Exodus 19:5
         </div>
-        <br/>
-        <br/>
-        <br/>
       </div>
     </>
   );
