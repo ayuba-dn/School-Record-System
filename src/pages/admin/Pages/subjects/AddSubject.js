@@ -11,7 +11,6 @@ import { Button } from "../../../../components/ui/button";
 import { Loader2, Plus, PlusCircle } from "lucide-react";
 import { useCreateSubjectMutation } from "../../../../app/api/allSubjectApi";
 import { useGetAllClassesQuery } from "../../../../app/api/classApi";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "../../../../components/ToastMessages/Notification";
 
