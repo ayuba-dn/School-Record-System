@@ -51,9 +51,7 @@ export const StudentsListTable = ({ classResultsData }) => {
             <th className="sticky left-[3rem] bg-inherit z-10 border-r-[1px] border-r-primary/[.5]">
               Name
             </th>
-            <th className="bg-inherit z-10" colSpan={uniqueSubjects.length}>
-              Subjects
-            </th>
+            
           </tr>
           <tr className="*:border-[1px] bg-gray-500 text-left *:p-4 *:font-medium text-white">
             <th className="sticky left-[-2rem] w-[5rem] bg-inherit z-10"></th>
