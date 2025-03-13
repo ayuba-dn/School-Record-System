@@ -31,19 +31,22 @@ export const allSubjectApi = createApi({
     createSubject: builder.mutation({
       query: (body) => ({
         url: "/subjects",
-        body,
         method: "POST",
+        body,
+        headers: { "Content-Type": "application/json" }, // Add this
       }),
       invalidatesTags: ["Subjects"],
     }),
+    
     updateSubject: builder.mutation({
-      query: (id, body) => ({
+      query: ({ id, body }) => ({
         url: `/subjects/${id}`,
         body,
         method: "PUT",
       }),
       invalidatesTags: ["Subjects"],
     }),
+    
     deleteSubject: builder.mutation({
       query: (id) => ({
         url: `/subjects/${id}`,

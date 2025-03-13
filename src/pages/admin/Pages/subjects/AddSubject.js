@@ -35,7 +35,7 @@ const AddSubject = () => {
       showToast("error", "Error!", error?.data?.message || "Something went wrong");
     }
   
-    if (isSuccess) {
+    if (isSuccess && !isLoading) {
       showToast("success", "Success!", "Subject Created Successfully");
       setOpenDialog(false);
       setSubjectDetails({
@@ -46,7 +46,8 @@ const AddSubject = () => {
         addedBy: "",
       });
     }
-  }, [error, isSuccess]);
+  }, [error, isSuccess, isLoading]);
+  
   
 
   const handleChange = (e) => {
@@ -61,8 +62,16 @@ const AddSubject = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createSubject(subjectDetails);
+    
+    const payload = {
+      ...subjectDetails,
+      classId: data?.find((c) => c.name === subjectDetails.classTitle)?.id || null,
+    };
+  
+    createSubject(payload);
   };
+
+  
 
   return (
     <Dialog onOpenChange={() => setOpenDialog(false)}>
@@ -116,11 +125,11 @@ const AddSubject = () => {
               ) : (
                 <>
                   <option></option>
-                  {data.map((classes) => (
-                    <option value={classes.name} key={classes.id}>
-                      {classes.name}
-                    </option>
-                  ))}
+                  {data?.map((classes) => (
+                  <option key={classes.id} value={classes.name}>
+                    {classes.name}
+                  </option>
+                ))}
                 </>
               )}
             </select>
