@@ -6,7 +6,6 @@ import { useGetAllSessionsQuery } from "../../../../app/api/sessionsApi";
 import SingleSession from "./SingleSession";
 import CreateTerms from "./CreateTerms";
 import DeleteModal from "../../../../components/DeleteModal";
-// import { useGetAllSessionsQuery } from '../../../../app/api/classApi'
 
 const AccademicSessions = () => {
   const { data, isLoading } = useGetAllSessionsQuery();
@@ -14,7 +13,7 @@ const AccademicSessions = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen w-full">
-        <Loader2 className=" animate-spin w-[60px] h-[60px]" />
+        <Loader2 className="animate-spin w-[60px] h-[60px]" />
       </div>
     );
   }
@@ -29,17 +28,19 @@ const AccademicSessions = () => {
               <h1 className="text-[20px] sm:text-[32px]">
                 All Academic Sessions,
               </h1>
-              <p className="text-sm">Total Sessions: 10</p>
+              <p className="text-sm">
+                Total Sessions: {data ? data.length : 0}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 ">
+          <div className="flex items-center gap-2">
             <AddSession />
             <CreateTerms />
           </div>
         </div>
 
-        {data.length === 0 ? (
+        {!data || data.length === 0 ? (
           <div className="flex items-center justify-center w-full flex-col gap-2 mt-12">
             <img src="/paper.png" alt="img" className="w-[300px]" />
             <p className="text-black text-[18px] font-semibold tracking-wide">
@@ -49,7 +50,7 @@ const AccademicSessions = () => {
         ) : (
           <div className="mt-4 sm:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {data.map((session) => (
-              <div key={session.name} className="bg-white shadow-md p-4">
+              <div key={session.id} className="bg-white shadow-md p-4">
                 <h2 className="text-[18px]">{session.name}</h2>
 
                 <div className="flex flex-col gap-2 mt-2">

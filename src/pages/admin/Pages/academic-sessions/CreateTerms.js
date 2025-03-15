@@ -14,17 +14,27 @@ import DatePicker from "react-datepicker";
 import {
   useCreateTermMutation,
   useGetAllSessionsQuery,
+  useGetSessionTermsQuery, // Updated hook
 } from "../../../../app/api/sessionsApi";
 
 const CreateTerms = () => {
   const navigate = useNavigate();
   const [createTerm, { isLoading, isSuccess, error }] = useCreateTermMutation();
-  const { data, isLoading: isSessionLoading } = useGetAllSessionsQuery();
-  const [termName, setTermName] = useState();
-  const [sessionId, setSessionIdName] = useState();
+  const { data: sessions, isLoading: isSessionLoading } =
+    useGetAllSessionsQuery();
+  const [termName, setTermName] = useState("");
+  const [sessionId, setSessionId] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [openDialog, setOpenDialog] = useState(false);
+
+  // Use the correct hook: useGetSessionTermsQuery
+  const { data: terms, refetch: refetchTerms } = useGetSessionTermsQuery(
+    sessionId,
+    {
+      skip: !sessionId, // Skip the query if no sessionId is selected
+    },
+  );
 
   useEffect(() => {
     if (error) {
@@ -34,15 +44,13 @@ const CreateTerms = () => {
       toast.success("Term Created Successfully");
       setOpenDialog(false);
       setTermName("");
-      setSessionIdName("");
-
-      //   navigate("/admin/academic-sessions")
+      setSessionId("");
+      refetchTerms(); // Refetch terms after creating a new one
     }
-  }, [error, isSuccess]);
+  }, [error, isSuccess, refetchTerms]);
 
   const formatStartDate = startDate.toISOString().split("T")[0];
-  const formatEndDate = startDate.toISOString().split("T")[0];
-  // Output: "2022-07-31"
+  const formatEndDate = endDate.toISOString().split("T")[0];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,6 +59,7 @@ const CreateTerms = () => {
       name: termName,
       startDate: formatStartDate,
       endDate: formatEndDate,
+      sessionId: sessionId,
     });
   };
 
@@ -114,16 +123,14 @@ const CreateTerms = () => {
             <select
               name="sessionId"
               value={sessionId}
-              onChange={(e) => setSessionIdName(e.target.value)}
+              onChange={(e) => setSessionId(e.target.value)}
               className="text-sm text-gray-600 px-4 py-2 outline-none border border-gray-300 rounded-lg"
             >
-              <option>Select Session For Term</option>
-              {data.map((session) => (
-                <>
-                  <option value={session.id} key={session.id}>
-                    {session.name}
-                  </option>
-                </>
+              <option value="">Select Session For Term</option>
+              {sessions?.map((session) => (
+                <option value={session.id} key={session.id}>
+                  {session.name}
+                </option>
               ))}
             </select>
           </div>
@@ -132,6 +139,20 @@ const CreateTerms = () => {
             {isLoading ? <Loader2 className="animate-spin" /> : "Create Term"}
           </Button>
         </form>
+
+        {/* Display terms for the selected session */}
+        {sessionId && (
+          <div className="mt-6">
+            <h3 className="font-semibold">Terms for Selected Session</h3>
+            <ul className="mt-2">
+              {terms?.map((term) => (
+                <li key={term.id} className="text-sm text-gray-600">
+                  {term.name} - {term.startDate} to {term.endDate}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
