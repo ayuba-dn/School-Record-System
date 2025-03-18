@@ -51,40 +51,28 @@ const AccademicSessions = () => {
           <div className="mt-4 sm:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {data.map((session) => (
               <div key={session.id} className="bg-white shadow-md p-4">
-              <h2 className="text-[18px]">{session.name}</h2>
-            
-              <div className="flex flex-col gap-2 mt-2">
-                <p className="text-sm">
-                  Start Date: {new Date(session.startDate).toISOString().split("T")[0]}
-                </p>
-                <p className="text-sm">
-                  End Date: {new Date(session.endDate).toISOString().split("T")[0]}
-                </p>
-              </div>
-            
-              {/* Display Terms */}
-              {session.terms && session.terms.length > 0 ? (
-                <div className="mt-2">
-                  <h3 className="text-sm font-semibold">Registered Terms:</h3>
-                  <ul className="list-disc list-inside text-sm text-gray-600">
-                    {session.terms.map((term, index) => (
-                      <li key={index}>{term.name || term}</li>
-                    ))}
-                  </ul>
+                <h2 className="text-[18px]">{session.name}</h2>
+
+                <div className="flex flex-col gap-2 mt-2">
+                  <p className="text-sm">
+                    Start Date:{" "}
+                    {new Date(session.startDate).toISOString().split("T")[0]}
+                  </p>
+                  <p className="text-sm">
+                    End Date:{" "}
+                    {new Date(session.endDate).toISOString().split("T")[0]}
+                  </p>
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500 mt-2">No terms registered.</p>
-              )}
-            
-              <div className="flex justify-between mt-4">
-                <div>
-                  <DeleteModal type={"sessions"} id={session.id} />
-                </div>
-                <div>
-                  <SingleSession session={session} />
+
+                <div className="flex justify-between">
+                  <div>
+                    <DeleteModal type={"sessions"} id={session.id} />
+                  </div>
+                  <div>
+                    <SingleSession session={session} />
+                  </div>
                 </div>
               </div>
-            </div>
             ))}
           </div>
         )}

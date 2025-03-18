@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { Button } from "../../../../components/ui/button";
 import { toast } from "react-toastify";
+import { useGetAllTermsQuery } from "../../../../app/api/termsApi";
 
 const SingleSession = ({ session }) => {
   const navigate = useNavigate();
@@ -28,6 +29,12 @@ const SingleSession = ({ session }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [openDialog, setOpenDialog] = useState(false);
+
+  const {
+    data: terms,
+    isLoading: isTermsLoading,
+    error: termsError,
+  } = useGetAllTermsQuery();
 
   useEffect(() => {
     if (error) {
@@ -43,10 +50,6 @@ const SingleSession = ({ session }) => {
     setStartDate(session?.startDate);
     setEndDate(session?.endDate);
   }, [session, error, isSuccess]);
-
-  console.log(sessionName);
-  // const formatStartDate= startDate.toISOString().split('T')[0]
-  //   const formatEndDate= endDate.toISOString().split('T')[0]
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -82,7 +85,7 @@ const SingleSession = ({ session }) => {
             />
           </div>
 
-          <div className="flex items-center gap-4 justify-center w-full ">
+          <div className="flex items-center gap-4 justify-center w-full">
             <div className="flex flex-col gap-2 w-full">
               <label className="text-gray-500 text-sm">Start Date</label>
               <DatePicker
@@ -112,48 +115,62 @@ const SingleSession = ({ session }) => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 w-full ">
-            <h2 className="font-semibold text-[20px]">All Terms</h2>
-            <Accordion type="single" collapsible className=" w-full">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>First term</AccordionTrigger>
-                <AccordionContent className="w-full  px-4 py-2">
-                  <div className="flex items-center gap-4 justify-center w-full ">
-                    <div className="flex flex-col gap-2 w-full">
-                      <label className="text-gray-500 text-sm">
-                        Start Date
-                      </label>
-                      <input
-                        type="text"
-                        value={""}
-                        disabled
-                        placeholder="2023/2024"
-                        className="py-3 bg-[#F9F9F9] outline-none px-3 border-none text-sm"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2 w-full">
-                      <label className="text-gray-500 text-sm">End Date</label>
-                      <input
-                        type="text"
-                        value={""}
-                        disabled
-                        placeholder="2023/2024"
-                        className="py-3 bg-[#F9F9F9] outline-none px-3 border-none text-sm"
-                      />
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
+          {/* Handle loading and errors */}
+          {isTermsLoading && <p>Loading terms...</p>}
+          {termsError && <p className="text-red-500">Failed to load terms</p>}
 
-          {/* <Button className="bg-[#4a3aff] text-white hover:bg-[#5446f2]">{isLoading ? <Loader2 className='animate-spin' /> :"Update Session"}</Button> */}
-          {/* <div className='flex items-center gap-2 w-full  justify-center'>
-                    <h2>Delete Session</h2>
-                    <div>
-                    <DeleteModal id={session.id} type={"sessions"} />
-                    </div>
-                </div> */}
+          {!isTermsLoading && !termsError && (
+            <div className="flex flex-col gap-4 w-full">
+              <h2 className="font-semibold text-[20px]">All Terms</h2>
+              <Accordion type="single" collapsible className="w-full">
+                {terms?.map((term) => (
+                  <AccordionItem key={term.id} value={`term-${term.id}`}>
+                    <AccordionTrigger>{term.name}</AccordionTrigger>
+                    <AccordionContent className="w-full px-4 py-2">
+                      <div className="flex items-center gap-4 justify-center w-full">
+                        <div className="flex flex-col gap-2 w-full">
+                          <label className="text-gray-500 text-sm">
+                            Start Date
+                          </label>
+                          <input
+                            type="text"
+                            value={term.startDate}
+                            disabled
+                            className="py-3 bg-[#F9F9F9] outline-none px-3 border-none text-sm"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-2 w-full">
+                          <label className="text-gray-500 text-sm">
+                            End Date
+                          </label>
+                          <input
+                            type="text"
+                            value={term.endDate}
+                            disabled
+                            className="py-3 bg-[#F9F9F9] outline-none px-3 border-none text-sm"
+                          />
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          )}
+
+          {/* Submit Button */}
+          {/* Uncomment this when enabling update functionality */}
+          {/* <Button className="bg-[#4a3aff] text-white hover:bg-[#5446f2]">
+            {isLoading ? <Loader2 className='animate-spin' /> :"Update Session"}
+          </Button> */}
+
+          {/* Delete Session */}
+          {/* <div className='flex items-center gap-2 w-full justify-center'>
+            <h2>Delete Session</h2>
+            <div>
+              <DeleteModal id={session.id} type={"sessions"} />
+            </div>
+          </div> */}
         </form>
       </DialogContent>
     </Dialog>
