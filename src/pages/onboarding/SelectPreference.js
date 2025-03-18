@@ -27,7 +27,7 @@ function SelectPreference() {
   };
 
   const handleOTPSubmit = () => {
-    const expectedOTP = process.env.REACT_APP_ADMIN_OTP || "123456";
+    const expectedOTP = "12345678";
     if (otp === expectedOTP) {
       setShowOTPModal(false);
       navigate("/admin-registration"); // Navigate to admin registration page
